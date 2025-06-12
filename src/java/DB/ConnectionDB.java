@@ -22,7 +22,7 @@ public class ConnectionDB {
             try {
 //databaseName?zeroDateTimeBehavior=convertToNull
                 String driver = "com.mysql.jdbc.Driver";
-                String url = "jdbc:mysql://localhost:3306/hr?zeroDateTimeBehavior=convertToNull";
+                String url = "jdbc:mysql://localhost:3306/hr";
                 String user = "root";
                 String password = "";
                 Class.forName(driver);

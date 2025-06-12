@@ -16,15 +16,19 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.sql.Statement;
+import java.sql.ResultSet;
+
 
 /**
  *
  * @author setia
  */
 public class Transaksi extends HttpServlet {
+
     private final Connection conn;
-    
-    public Transaksi (){
+
+    public Transaksi() {
         conn = ConnectionDB.getConnectionDB();
     }
 
@@ -48,20 +52,44 @@ public class Transaksi extends HttpServlet {
         String txtPotongan = request.getParameter("potongan");
         String txtPlafon = request.getParameter("plafon");
         String txtNoRek = request.getParameter("no_rek");
-        
-        PreparedStatement prst = null;
-        String insertQuery = "insert into m_bank(KodeBank, NamaBank) " + "values ('"+txtKode+"','"+txtStatus+"')";
-        try {
-            prst = conn.prepareStatement(insertQuery);
-        } catch (SQLException ex) {
-            Logger.getLogger(Transaksi.class.getName()).log(Level.SEVERE, null, ex);
+
+        String act = request.getParameter("action");
+
+        /* tambahkan di sini untuk proses INSERT data */ PreparedStatement prSt = null;
+        if ((act.equalsIgnoreCase("tambahdata"))) {
+            String insertQuery = "insert into m_bank(KodeBank, NamaBank) " + "values ('" + txtKode + "','" + txtStatus + "')";
+            try {
+                prSt = conn.prepareStatement(insertQuery);
+            } catch (SQLException ex) {
+                Logger.getLogger(Transaksi.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            try {
+                prSt.executeUpdate();
+            } catch (SQLException ex) {
+                Logger.getLogger(Transaksi.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else if (act.equalsIgnoreCase("caridata")) {
+            try {
+                String selectQuery = "SELECT KodeBank, NamaBank from m_bank where KodeBank = " + "'" + txtKode + "'";
+                Statement st = conn.createStatement();
+                ResultSet rs = st.executeQuery(selectQuery);
+                rs.beforeFirst();
+                while (rs.next()) {
+                    txtKode = rs.getString("KodeBank");
+                    txtNama = rs.getString("NamaBank");
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(Transaksi.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else if (act.equalsIgnoreCase("deletedata")) {
+            try {
+                String deleteQuery = "DELETE from m_bank where KodeBank = " + "'" + txtKode + "'";
+                prSt = conn.prepareStatement(deleteQuery);
+                prSt.executeUpdate();
+            } catch (SQLException ex) {
+                Logger.getLogger(Transaksi.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
-        try {
-            prst.executeUpdate();
-        } catch (SQLException ex) {
-            Logger.getLogger(Transaksi.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
         request.setAttribute("kode", txtKode);
         request.setAttribute("status", txtStatus);
         request.setAttribute("nama", txtNama);
@@ -73,9 +101,7 @@ public class Transaksi extends HttpServlet {
         request.setAttribute("plafon", txtPlafon);
         request.setAttribute("email", txtEmail);
         request.setAttribute("noRek", txtNoRek);
-        
         request.getRequestDispatcher("form.jsp").forward(request, response);
 // response.getWriter().println(txtBank);
     }
-
 }

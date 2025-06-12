@@ -12,7 +12,7 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <form action="transaksi" method="post">
+        <form action="transaksi?action=tambahData" method="post">
             <fieldset>
                 <p>Master Pelanggan</p>
                 <hr />
@@ -28,9 +28,22 @@
                                 />
                         </td>
                         <td>
-                            <label for="status">status:</label>
+                            <input type="button" value="Cari Data" onclick="mySearch()">
+                            </input> 
                         </td>
-                        <td>
+                        <td> 
+                            <input type="button" value="Hapus Data" onclick="myDelete()">
+                            </input>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Nama</td> 
+                        <td> <input type="text" name="nama" value="${nama}" /> 
+                        </td> 
+                        <td> 
+                            <label for="status">status:</label>
+                        </td> 
+                        <td>                   
                             <select id="status" name="status">
                                 <option value="aktif">Aktif</option>
                                 <option value="tidak aktif">Tidak aktif</option>
@@ -118,3 +131,32 @@
         </form>
     </body>
 </html>
+<script type="text/javascript">
+    var objjax;
+    function createobjjax()
+    {
+        if (window.XMLHttpRequest) {
+            return new XMLHttpRequest();
+        }
+        if (window.ActiveXObject) {
+            return new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        return null;
+    }
+    function mySearch() {
+        var kode = document.getElementById("kode").value;
+        objjax = createobjjax();
+        var url = "transaksi?action=cariData";
+        url = url + "&kode=" + kode;
+        objjax.open("GET", url, true);
+        objjax.send(null);
+    }
+    function myDelete() {
+        var kode = document.getElementById("kode").value;
+        objjax = createobjjax();
+        var url = "transaksi?action=deleteData";
+        url = url + "&kode=" + kode;
+        objjax.open("GET", url, true);
+        objjax.send(null);
+    }
+</script>

@@ -9,17 +9,30 @@
         <servlet-name>Transaksi</servlet-name>
         <url-pattern>/transaksi</url-pattern>
     </servlet-mapping>
+    
     <servlet>
         <servlet-name>Transaksi</servlet-name>
         <servlet-class>Tugas.Transaksi</servlet-class>
     </servlet>
+    
+    <servlet>
+        <servlet-name>ConDB</servlet-name>
+        <servlet-class>DB.ConDB</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ConDB</servlet-name>
+        <url-pattern>/ConDB</url-pattern>
+    </servlet-mapping>
+    
     <session-config>
         <session-timeout>
             30
         </session-timeout>
     </session-config>
+    
     <welcome-file-list>
-        <welcome-file>form.jsp</welcome-file>
+        <welcome-file>latihanDB.jsp</welcome-file>
     </welcome-file-list>
 
 </web-app>
